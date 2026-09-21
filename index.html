@@ -61,6 +61,27 @@ figure.map img{display:block;width:100%;height:auto}
 figure.map figcaption{padding:12px 18px;font-size:14px;color:var(--slate-lt);border-top:1px solid var(--line)}
 .contact{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .contact a{font-weight:600}
+form.ask{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:24px;max-width:760px;margin:0 0 34px}
+form.ask .row{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:16px}
+form.ask .fld{display:flex;flex-direction:column}
+form.ask label{font-size:14px;font-weight:600;color:var(--green);margin-bottom:5px}
+form.ask label .req{color:var(--slate-lt);font-weight:400}
+form.ask input,form.ask textarea{font:inherit;font-size:16px;color:var(--slate);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+form.ask textarea{min-height:120px;resize:vertical}
+form.ask input:focus,form.ask textarea:focus{outline:2px solid var(--green-lt);outline-offset:1px;background:#fff}
+form.ask input:invalid:not(:placeholder-shown){border-color:#a33}
+form.ask .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+form.ask button{font:inherit;font-weight:600;background:var(--green);color:#fff;border:0;border-radius:6px;padding:12px 26px;cursor:pointer}
+form.ask button:hover{background:var(--green-lt)}
+form.ask button[disabled]{opacity:.55;cursor:default}
+form.ask .fine{font-size:13px;color:var(--slate-lt);margin:14px 0 0}
+.asknote{border-radius:8px;padding:14px 18px;margin-top:18px;font-size:15px;display:none}
+.asknote.on{display:block}
+.asknote.ok{background:#EAF2EC;border-left:4px solid var(--green);color:var(--green)}
+.asknote.bad{background:#FBEDEA;border-left:4px solid #A6462F;color:#7C3120}
+.askdone{background:var(--white);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:24px;max-width:760px;margin:0 0 34px;display:none}
+.askdone.on{display:block}
+.askdone h3{margin-bottom:.35em}
 footer{padding:36px 0 48px;font-size:13px;color:var(--slate-lt)}
 footer p{max-width:900px}footer .net a{margin-right:14px}
 .small{font-size:14px;color:var(--slate-lt)}
@@ -113,9 +134,122 @@ footer p{max-width:900px}footer .net a{margin-right:14px}
 
 <section id="contact"><div class="wrap">
 <h2>Contact</h2>
+<p class="lede">Tell us what you need and a scope and a quote come back. You do not have to call.</p>
+<form class="ask" id="askform" novalidate>
+<div class="row">
+<div class="fld"><label for="ask-first">First name</label><input id="ask-first" name="first_name" type="text" autocomplete="given-name" required placeholder=" "></div>
+<div class="fld"><label for="ask-last">Last name</label><input id="ask-last" name="last_name" type="text" autocomplete="family-name" required placeholder=" "></div>
+</div>
+<div class="row">
+<div class="fld"><label for="ask-email">Email</label><input id="ask-email" name="email" type="email" autocomplete="email" required placeholder=" "></div>
+<div class="fld"><label for="ask-phone">Phone <span class="req">optional</span></label><input id="ask-phone" name="phone" type="tel" autocomplete="tel" placeholder="843 555 0123"></div>
+</div>
+<div class="row">
+<div class="fld"><label for="ask-loc">Property or job address <span class="req">optional</span></label><input id="ask-loc" name="job_location" type="text" autocomplete="street-address" placeholder="Street and city"></div>
+</div>
+<div class="row">
+<div class="fld"><label for="ask-need">What do you need?</label><textarea id="ask-need" name="job_details" required placeholder=" "></textarea></div>
+</div>
+<div class="hp" aria-hidden="true"><label for="ask-cw">Company website</label><input id="ask-cw" name="company_website" type="text" tabindex="-1" autocomplete="off"></div>
+<button type="submit" id="askbtn">Send it</button>
+<p class="fine">What you send here is used to answer you and nothing else. No list, no sharing, no resale.</p>
+<div class="asknote" id="asknote" role="status" aria-live="polite"></div>
+</form>
+<div class="askdone" id="askdone" role="status" aria-live="polite">
+<h3>Got it.</h3>
+<p>Your message is in and a person reads it, usually the same day. If it cannot wait, call or text 843-455-2949.</p>
+</div>
+<noscript><div class="note">This form needs JavaScript turned on. Call or text 843-455-2949, or email <a href="mailto:Support@newrootsdevelopment.co">Support@newrootsdevelopment.co</a>, and it gets exactly the same attention.</div></noscript>
+<script>
+(function(){
+  var CID = "9b2b4a54-6978-42e6-957c-f3c4852845dc", FID = "d3fc16c9-6f07-49dd-8a4f-f0df4e886ffa", SRC = "myrtlebeachdrone.co";
+  var f = document.getElementById("askform");
+  if (!f) return;
+  var note = document.getElementById("asknote");
+  var done = document.getElementById("askdone");
+  var btn  = document.getElementById("askbtn");
+  var tok = null;
+
+  function say(kind, msg) { note.className = "asknote on " + kind; note.textContent = msg; }
+  function quiet() { note.className = "asknote"; note.textContent = ""; }
+
+  // Wix wants E.164 on a PHONE field. Anything a local caller types normalizes to +1.
+  function phone(v) {
+    var d = String(v || "").replace(/[^0-9+]/g, "");
+    if (!d) return "";
+    if (d.charAt(0) === "+") return d;
+    if (d.length === 11 && d.charAt(0) === "1") return "+" + d;
+    if (d.length === 10) return "+1" + d;
+    return "+" + d;
+  }
+
+  function token() {
+    if (tok && tok.exp > Date.now() + 30000) return Promise.resolve(tok.t);
+    return fetch("https://www.wixapis.com/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId: CID, grantType: "anonymous" })
+    }).then(function (r) {
+      if (!r.ok) throw new Error("auth");
+      return r.json();
+    }).then(function (d) {
+      tok = { t: d.access_token, exp: Date.now() + (d.expires_in || 3600) * 1000 };
+      return tok.t;
+    });
+  }
+
+  function finish() {
+    f.style.display = "none";
+    done.className = "askdone on";
+    if (done.scrollIntoView) done.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (f.company_website.value) { finish(); return; }   // bot filled the hidden field
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+    quiet();
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+
+    var vals = {
+      first_name: f.first_name.value.trim(),
+      last_name: f.last_name.value.trim(),
+      email: f.email.value.trim(),
+      job_details: f.job_details.value.trim(),
+      source: SRC
+    };
+    var loc = f.job_location.value.trim();
+    if (loc) vals.job_location = loc;
+    var ph = phone(f.phone.value);
+    if (ph) vals.phone = ph;
+
+    token().then(function (t) {
+      return fetch("https://www.wixapis.com/form-submission-service/v4/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": t },
+        body: JSON.stringify({ submission: { formId: FID, submissions: vals } })
+      });
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; });
+    }).then(function (res) {
+      var sub = res.d && res.d.submission;
+      var st = sub && sub.status;
+      // Every one of these three means the submission exists. Do not invite a resend.
+      if (res.ok && (st === "CONFIRMED" || st === "PENDING" || st === "PAYMENT_WAITING")) { finish(); return; }
+      throw new Error("send");
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = "Send it";
+      say("bad", "That did not go through. Call or text 843-455-2949, or email Support@newrootsdevelopment.co, and we will pick it up from there.");
+    });
+  });
+})();
+</script>
+<h3>Or reach a person directly</h3>
 <div class="contact">
 <div><h3>Call or text</h3><p><a href="tel:+18434552949">843-455-2949</a></p></div>
-<div><h3>Email</h3><p><a href="mailto:Support@newrootsdevelopment.co">Support@newrootsdevelopment.co</a></p><p class="small">Send the address, what you need, and when. A scope and a quote come back.</p></div>
+<div><h3>Email</h3><p><a href="mailto:Support@newrootsdevelopment.co">Support@newrootsdevelopment.co</a></p><p class="small">Send the address, what you need, and when.</p></div>
 <div><h3>Office</h3><p>New Roots Development, LLC<br>7614 Triana Ct<br>Myrtle Beach, SC 29572</p></div>
 </div>
 <p class="small" style="margin-top:20px">Pricing is quoted per project. There is no rate sheet on this page because no two sites are the same.</p>

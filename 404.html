@@ -38,6 +38,27 @@ figure.map img{display:block;width:100%;height:auto}
 figure.map figcaption{padding:12px 18px;font-size:14px;color:var(--slate-lt);border-top:1px solid var(--line)}
 .contact{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .contact a{font-weight:600}
+form.ask{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:24px;max-width:760px;margin:0 0 34px}
+form.ask .row{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-bottom:16px}
+form.ask .fld{display:flex;flex-direction:column}
+form.ask label{font-size:14px;font-weight:600;color:var(--green);margin-bottom:5px}
+form.ask label .req{color:var(--slate-lt);font-weight:400}
+form.ask input,form.ask textarea{font:inherit;font-size:16px;color:var(--slate);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+form.ask textarea{min-height:120px;resize:vertical}
+form.ask input:focus,form.ask textarea:focus{outline:2px solid var(--green-lt);outline-offset:1px;background:#fff}
+form.ask input:invalid:not(:placeholder-shown){border-color:#a33}
+form.ask .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+form.ask button{font:inherit;font-weight:600;background:var(--green);color:#fff;border:0;border-radius:6px;padding:12px 26px;cursor:pointer}
+form.ask button:hover{background:var(--green-lt)}
+form.ask button[disabled]{opacity:.55;cursor:default}
+form.ask .fine{font-size:13px;color:var(--slate-lt);margin:14px 0 0}
+.asknote{border-radius:8px;padding:14px 18px;margin-top:18px;font-size:15px;display:none}
+.asknote.on{display:block}
+.asknote.ok{background:#EAF2EC;border-left:4px solid var(--green);color:var(--green)}
+.asknote.bad{background:#FBEDEA;border-left:4px solid #A6462F;color:#7C3120}
+.askdone{background:var(--white);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:24px;max-width:760px;margin:0 0 34px;display:none}
+.askdone.on{display:block}
+.askdone h3{margin-bottom:.35em}
 footer{padding:36px 0 48px;font-size:13px;color:var(--slate-lt)}
 footer p{max-width:900px}footer .net a{margin-right:14px}
 .small{font-size:14px;color:var(--slate-lt)}
