@@ -9,6 +9,6 @@ Single-page local landing site for New Roots Development, LLC, served by GitHub 
   visitor-facing by design; it mints anonymous tokens and nothing else.
 - `CNAME` binds the custom domain. Do not delete it; Pages drops the domain if it goes.
 - `robots.txt` and `sitemap.xml` are static. Update `lastmod` in the sitemap when `index.html` changes.
-- Copy rules: no em dashes, no employer names, no command counts, no posted prices, Autodesk marks as adjectives followed by a noun. See the NRD project `nrd/conventions.md`.
+- Copy rules: no em dashes, no employer names, no command counts, posted prices only as they appear in `nrd/canonical-figures.md`, Autodesk marks as adjectives followed by a noun. See the NRD project `nrd/conventions.md`.
 
-Generated 2026-09-21 by `build.py` in the NRD sites kit. Edit `index.html` directly or regenerate from the kit; either is fine, but do not do both without merging.
+Generated 2026-09-27 by `build.py` in the NRD sites kit. Edit `index.html` directly or regenerate from the kit; either is fine, but do not do both without merging.
